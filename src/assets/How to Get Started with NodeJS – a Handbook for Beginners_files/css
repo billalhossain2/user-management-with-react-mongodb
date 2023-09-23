@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'Hind Siliguri';
+  font-style: normal;
+  font-weight: 300;
+  src: url(https://fonts.gstatic.com/l/font?kit=ijwOs5juQtsyLLR5jN4cxBEoRDf44uQHTgmC8JnUjMeI876D_cZESI-e3mvj1lxeIOJF7yAnScstBkEwx4hNgrAky_NysNFSWVDOjXMPWUL-zP_HUmssGMr42xmbTMUn3tqYLo0F2a3OPGzgc8IcAg_S9ZMxg7v8AA&skey=285dedcdf7848409&v=v12) format('woff2');
+}
+@font-face {
+  font-family: 'Hind Siliguri';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/l/font?kit=ijwTs5juQtsyLLR5jN4cxBEofJ7IosEZAGrjkTo8Z8eL1b6D-cZESY-ezGvj2VxeIeJF6CAnSsstOEEwwohNg7AkyPNysdFSVlDOj3MPX0L-zf_HUWssBsr43RmbQsUn39qYKY0F2K3PBGzgf8IcBA_S35Mxiw&skey=5aed9b95d255b37c&v=v12) format('woff2');
+}
+@font-face {
+  font-family: 'Hind Siliguri';
+  font-style: normal;
+  font-weight: 700;
+  src: url(https://fonts.gstatic.com/l/font?kit=ijwOs5juQtsyLLR5jN4cxBEoRCf_4uQHTgmC8JnUjMeI876D_cZESI-e3mvj1lxeIOJF7yAnScstBkEwx4hNgrAky_NysNFSWVDOjXMPWUL-zP_HUmssGMr42xmbTMUn3tqYLo0F2a3OPGzgc8IcAg_S9ZMxg7v8AA&skey=abb4efea7259d7b0&v=v12) format('woff2');
+}
