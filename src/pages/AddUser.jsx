@@ -84,7 +84,7 @@ const AddUser = () => {
               className="ml-8"
               type="radio"
               name="gender"
-              value="Felame"
+              value="Female"
               id="female"
             />
             <label className="ml-2" htmlFor="female">

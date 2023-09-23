@@ -1,11 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { Link, useParams } from "react-router-dom";
 
 const EditUser = () => {
   const {userId} = useParams()
-
-  useEffect(()=>{}, [])
+  const [user, setUser] = useState(null)
+  useEffect(()=>{
+    fetch(`https://user-management-mongo-express-server-ej86tf1wj.vercel.app/user/?id=${userId}`)
+    .then(res => res.json())
+    .then(data =>setUser(data))
+    .catch(error => console.log(error.message))
+  }, [])
   
   const handleSubmit = (e)=>{
     e.preventDefault()
@@ -58,6 +63,7 @@ const EditUser = () => {
               type="text"
               name="userName"
               id="name"
+              defaultValue={user?.name}
             />
           </div>
           <div>
@@ -70,6 +76,7 @@ const EditUser = () => {
               type="email"
               name="email"
               id="name"
+              defaultValue={user?.email}
             />
           </div>
           <div>
@@ -80,6 +87,7 @@ const EditUser = () => {
               name="gender"
               value="Male"
               id="male"
+              checked={user?.gender === "Male" ? true : false}
             />
             <label className="ml-2" htmlFor="male">
               Male
@@ -88,8 +96,9 @@ const EditUser = () => {
               className="ml-8"
               type="radio"
               name="gender"
-              value="Felame"
+              value="Female"
               id="female"
+              checked={user?.gender === "Female" ? true : false}
             />
             <label className="ml-2" htmlFor="female">
               Female
@@ -100,6 +109,7 @@ const EditUser = () => {
               name="gender"
               value="Other"
               id="other"
+              checked={user?.gender === "Other" ? true : false}
             />
             <label className="ml-2" htmlFor="other">
               Other
@@ -113,6 +123,7 @@ const EditUser = () => {
               name="status"
               value="Active"
               id="active"
+              checked={user?.status === "Active" ? true : false}
             />
             <label className="ml-2" htmlFor="active">
               Active
@@ -123,6 +134,7 @@ const EditUser = () => {
               name="status"
               value="Inactive"
               id="inactive"
+              checked={user?.status === "Inactive" ? true : false}
             />
             <label className="ml-2" htmlFor="inactive">
               Inactive
