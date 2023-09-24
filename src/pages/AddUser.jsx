@@ -1,7 +1,8 @@
 import React from "react";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const AddUser = () => {
   const handleSubmit = (e)=>{
     e.preventDefault()
@@ -10,9 +11,13 @@ const AddUser = () => {
     const email = form.email.value;
     const gender = form.gender.value;
     const status = form.status.value;
+
+    if(!name || !email || !gender || !status){
+      return alert("All fields are mandatory")
+    }
     
     //insert data to DB
-    fetch('https://user-management-mongo-express-server-htjk4erqb.vercel.app/user',{
+    fetch('https://user-management-mongo-express-server-ogf7jct4o.vercel.app/user',{
       method:"POST",
       headers:{
         'content-type':'application/json',
@@ -22,7 +27,7 @@ const AddUser = () => {
     .then(res => res.json())
     .then((result)=>{
       if(result.acknowledged){
-        alert("Successfully added a new user.")
+        toast("Successfully added a new user", {autoClose:1000})
       }
     })
     .catch(error => console.log(error.message))
@@ -131,6 +136,7 @@ const AddUser = () => {
           </div>
         </form>
       </div>
+      <ToastContainer></ToastContainer>
     </div>
   );
 };

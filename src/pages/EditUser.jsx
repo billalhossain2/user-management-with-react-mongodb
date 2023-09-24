@@ -1,14 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import { Link, useParams } from "react-router-dom";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const EditUser = () => {
   const {userId} = useParams()
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
+
+  const [genderStatus, setGenderStatus] = useState("")
+  const [statusValue, setStatusvalue] = useState("")
+
   useEffect(()=>{
-    fetch(`https://user-management-mongo-express-server-ej86tf1wj.vercel.app/user/?id=${userId}`)
+    fetch(`https://user-management-mongo-express-server-ogf7jct4o.vercel.app/user/?id=${userId}`)
     .then(res => res.json())
-    .then(data =>setUser(data))
+    .then(data =>{
+      setUser(data)
+      setGenderStatus(data.gender)
+      setStatusvalue(data.status)
+    })
     .catch(error => console.log(error.message))
   }, [])
   
@@ -19,9 +28,14 @@ const EditUser = () => {
     const email = form.email.value;
     const gender = form.gender.value;
     const status = form.status.value;
-    
+
+    //validate empty fields
+    if(!name || !email || !gender || !status){
+      return alert("All fields are mandatory")
+    }
+
     //update to DB
-    fetch(`https://user-management-mongo-express-server-htjk4erqb.vercel.app/user/${userId}`, {
+    fetch(`https://user-management-mongo-express-server-ogf7jct4o.vercel.app/user/${userId}`, {
       method:"PUT",
       headers:{
         'content-type':'application/json'
@@ -31,10 +45,18 @@ const EditUser = () => {
     .then(res => res.json())
     .then(result => {
       if(result.acknowledged && result.modifiedCount === 1){
-        alert("Successfully updated")
+        toast("Successfully updated", {autoClose:1000})
       }
     })
     .catch(error => console.log(error.message))
+  }
+
+  const handleChange = (ev)=>{
+    setGenderStatus(ev.target.value)
+  }
+
+  const handleStatusChange = (e)=>{
+    setStatusvalue(e.target.value)
   }
   return (
     <div>
@@ -87,7 +109,8 @@ const EditUser = () => {
               name="gender"
               value="Male"
               id="male"
-              checked={user?.gender === "Male" ? true : false}
+              checked={genderStatus==="Male"}
+              onChange={handleChange}
             />
             <label className="ml-2" htmlFor="male">
               Male
@@ -98,7 +121,8 @@ const EditUser = () => {
               name="gender"
               value="Female"
               id="female"
-              checked={user?.gender === "Female" ? true : false}
+              checked={genderStatus==="Female"}
+              onChange={handleChange}
             />
             <label className="ml-2" htmlFor="female">
               Female
@@ -109,7 +133,8 @@ const EditUser = () => {
               name="gender"
               value="Other"
               id="other"
-              checked={user?.gender === "Other" ? true : false}
+              checked={genderStatus==="Other"}
+              onChange={handleChange}
             />
             <label className="ml-2" htmlFor="other">
               Other
@@ -123,7 +148,8 @@ const EditUser = () => {
               name="status"
               value="Active"
               id="active"
-              checked={user?.status === "Active" ? true : false}
+              checked={statusValue === "Active"}
+              onChange={handleStatusChange}
             />
             <label className="ml-2" htmlFor="active">
               Active
@@ -134,7 +160,8 @@ const EditUser = () => {
               name="status"
               value="Inactive"
               id="inactive"
-              checked={user?.status === "Inactive" ? true : false}
+              checked={statusValue === "Inactive"}
+              onChange={handleStatusChange}
             />
             <label className="ml-2" htmlFor="inactive">
               Inactive
@@ -147,6 +174,7 @@ const EditUser = () => {
           </div>
         </form>
       </div>
+      <ToastContainer></ToastContainer>
     </div>
   );
 };
