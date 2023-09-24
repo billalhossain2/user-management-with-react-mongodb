@@ -33,7 +33,7 @@ const AddUser = () => {
     .catch(error => console.log(error.message))
   }
   return (
-    <div>
+    <div className="px-3">
       <Header></Header>
       <Link to="/">
         <p>

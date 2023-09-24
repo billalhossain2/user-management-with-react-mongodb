@@ -59,7 +59,7 @@ const EditUser = () => {
     setStatusvalue(e.target.value)
   }
   return (
-    <div>
+    <div className="px-3">
       <Header></Header>
       <Link to="/">
         <p>

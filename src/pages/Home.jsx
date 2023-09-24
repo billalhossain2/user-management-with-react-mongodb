@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from "sweetalert2";
 const Home = () => {
   const navigate = useNavigate();
   const handleNavigation = () => navigate("/addUser");
@@ -11,6 +12,11 @@ const Home = () => {
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true)
+
+  const [searchTxt, setSearchTxt] = useState("")
+  const [filteredTxt, setFilteredTxt] = useState("")
+  const [sortStatus, setSortStatus] = useState("")
+
 //retrieve data from mongo DB
   useEffect(() => {
     fetch(
@@ -25,6 +31,22 @@ const Home = () => {
 
   //delete single data from client and DB
   const handleDeleteUser = (userId)=>{
+    // confirm to delete 
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+        )
     //delete from DB
     fetch(`https://user-management-mongo-express-server-ogf7jct4o.vercel.app/user/${userId}`, {method:"DELETE"})
     .then(res => res.json())
@@ -33,10 +55,21 @@ const Home = () => {
          //delete from UI
           const restUsers = users.filter(user=> user._id !== userId)
           setUsers(restUsers)
-          toast("Successfully deleted", {autoClose:1000})
       }
     })
     .catch(error => console.log(error.message))
+      }
+    })
+  }
+
+  //view details
+  const handleViewUser = (userId)=>{
+
+  }
+
+  //handle sort
+  const handleSortChange = (e)=>{
+    setSortStatus(e.target.value)
   }
 
   //delete all data from client and DB
@@ -53,6 +86,15 @@ const Home = () => {
     .catch(error => console.log(error.message))
   }
 
+  //handle search operation
+  const handleSearchChange = (e)=>{
+    setSearchTxt(e.target.value)
+  }
+
+  const handleFilterChange = (e)=>{
+    setFilteredTxt(e.target.value)
+  }
+
   return (
     <div className="px-3">
       <Header></Header>
@@ -66,11 +108,19 @@ const Home = () => {
           <i className="fa-regular fa-user"></i>
         </button>
         <div>
-          <input className="px-5 py-2 rounded-md outline-none border-[1px] border-solid border-[#16db93cb] me-3" type="search" name="" id="" placeholder="Search user"/>
-          <select className="px-5 py-2 rounded-md outline-none border-[1px] border-solid border-[#16db93cb]" name="" id="">
+          <input onChange={handleSearchChange} className="px-5 py-2 rounded-md outline-none border-[1px] border-solid border-[#16db93cb] me-3" type="search" name="" id="" placeholder="Search user"/>
+          <select onChange={handleSortChange} className="px-5 py-2 rounded-md outline-none border-[1px] border-solid border-[#16db93cb] me-3" name="" id="">
+            <option selected disabled value="Sort By Alphabet">Sort By Alphabet</option>
+            <option value="Ascending">Ascending</option>
+            <option value="Descending">Descending</option>
+            <option value="Default">Default</option>
+          </select>
+          <select onChange={handleFilterChange} className="px-5 py-2 rounded-md outline-none border-[1px] border-solid border-[#16db93cb]" name="" id="">
             <option value="All">All</option>
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
           </select>
         </div>
       </div>
@@ -91,7 +141,29 @@ const Home = () => {
               </td></tr>
           }
             {
-              users?.map(user =>(
+              users
+              .filter((user)=>{
+                if(searchTxt){
+                  const pattern = new RegExp(searchTxt, "i")
+                  if(user.name.match(pattern)){
+                    return user;
+                  }
+                }else{
+                  return user
+                }
+              })
+              .filter(user => {
+                if(filteredTxt){
+                  if(user.status === filteredTxt || user.gender === filteredTxt){
+                    return user;
+                  }else if(filteredTxt === "All"){
+                    return user;
+                  }
+                }else{
+                  return user;
+                }
+              })
+              .map(user =>(
                 <tr key={user?._id}>
                 <td className="px-10 py-5">{user.name}</td>
                 <td className="px-10 py-5">{user.email}</td>
@@ -102,6 +174,7 @@ const Home = () => {
                     <i className="fa-solid fa-pen bg-[#d6cfcf] hover:bg-[#184E40] hover:text-white p-2 rounded-sm text-[#774320] cursor-pointer duration-300"></i>
                   </Link>
                   <i onClick={()=>handleDeleteUser(user._id)} className="fa-solid fa-xmark bg-[#d6cfcf] hover:bg-[#184E40] hover:text-white p-2 rounded-sm text-[#774320] cursor-pointer duration-300"></i>
+                  <i onClick={()=>handleViewUser(user._id)} className="fa-regular fa-eye bg-[#d6cfcf] hover:bg-[#184E40] hover:text-white p-2 rounded-sm text-[#774320] cursor-pointer duration-300"></i>
                 </td>
               </tr>
               ))
