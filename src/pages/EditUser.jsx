@@ -11,7 +11,7 @@ const EditUser = () => {
   const [statusValue, setStatusvalue] = useState("")
 
   useEffect(()=>{
-    fetch(`https://user-management-crud-with-mongodb.netlify.app/user/${userId}`)
+    fetch(`https://user-management-mongo-express-server.vercel.app/user/${userId}`)
     .then(res => res.json())
     .then(data =>{
       setUser(data)
