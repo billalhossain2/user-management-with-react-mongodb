@@ -8,7 +8,6 @@ import Swal from "sweetalert2";
 const Home = () => {
   const navigate = useNavigate();
   const handleNavigation = () => navigate("/addUser");
-  // API: https://user-management-mongo-express-server-htjk4erqb.vercel.app/
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true)
@@ -20,7 +19,7 @@ const Home = () => {
 //retrieve data from mongo DB
   useEffect(() => {
     fetch(
-      "https://user-management-mongo-express-server-ogf7jct4o.vercel.app/users"
+      "https://user-management-mongo-express-server.vercel.app/users"
     )
       .then((res) => res.json())
       .then((data) => {
@@ -48,7 +47,7 @@ const Home = () => {
           'success'
         )
     //delete from DB
-    fetch(`https://user-management-mongo-express-server-ogf7jct4o.vercel.app/user/${userId}`, {method:"DELETE"})
+    fetch(`https://user-management-mongo-express-server.vercel.app/user/${userId}`, {method:"DELETE"})
     .then(res => res.json())
     .then(result => {
       if(result.acknowledged){
@@ -74,16 +73,32 @@ const Home = () => {
 
   //delete all data from client and DB
   const handleClearAll = ()=>{
-    //clear all from client
-    setUsers([])
-
     //clear all from DB
-    fetch(`https://user-management-mongo-express-server-htjk4erqb.vercel.app/users`, {method:"DELETE"})
-    .then(res => res.json())
-    .then(result => {
-      console.log(result)
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, clear all!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+        )
+         //clear all from client
+        setUsers([])
+        fetch(`https://user-management-mongo-express-server.vercel.app/users`, {method:"DELETE"})
+        .then(res => res.json())
+        .then(result => {
+          console.log(result)
+        })
+        .catch(error => console.log(error.message))
+      }
     })
-    .catch(error => console.log(error.message))
   }
 
   //handle search operation
@@ -110,7 +125,7 @@ const Home = () => {
         <div>
           <input onChange={handleSearchChange} className="px-5 py-2 rounded-md outline-none border-[1px] border-solid border-[#16db93cb] me-3" type="search" name="" id="" placeholder="Search user"/>
           <select onChange={handleSortChange} className="px-5 py-2 rounded-md outline-none border-[1px] border-solid border-[#16db93cb] me-3" name="" id="">
-            <option selected disabled value="Sort By Alphabet">Sort By Alphabet</option>
+            <option className="text-gray-300" selected disabled value="Sort By Alphabet">Sort By Alphabet</option>
             <option value="Ascending">Ascending</option>
             <option value="Descending">Descending</option>
             <option value="Default">Default</option>

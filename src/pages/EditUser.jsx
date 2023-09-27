@@ -35,7 +35,7 @@ const EditUser = () => {
     }
 
     //update to DB
-    fetch(`https://user-management-mongo-express-server-ogf7jct4o.vercel.app/user/${userId}`, {
+    fetch(`https://user-management-mongo-express-server.vercel.app/user/${userId}`, {
       method:"PUT",
       headers:{
         'content-type':'application/json'

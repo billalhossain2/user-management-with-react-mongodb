@@ -17,7 +17,7 @@ const AddUser = () => {
     }
     
     //insert data to DB
-    fetch('https://user-management-mongo-express-server-ogf7jct4o.vercel.app/user',{
+    fetch('https://user-management-mongo-express-server.vercel.app/user',{
       method:"POST",
       headers:{
         'content-type':'application/json',
